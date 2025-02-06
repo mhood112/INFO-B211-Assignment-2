@@ -1,0 +1,205 @@
+mhood112: With using numpy, and reading this csv, Determine the field goal accuracy, three point accuracy, and free throw accuracy for each player in each season.
+Determine the averrage points scored per minute for each player in each season.
+Determine the overall shooting accuracy of each player in each season.
+Determine the average number of blocks per game and the average number of steals per game for each player in each season.
+Create a list of the top 100 players and corresponding season for each of your calculated metrics: field goal accuracy, three point accuracy, free throw accuracy, average points scored per game, overall shooting accuracy, average blocks per game, and average steals per game.
+
+GitHub Copilot: To achieve this, follow these steps:
+
+1. **Read the CSV file using pandas**.
+2. **Calculate the required metrics**.
+3. **Sort and extract the top 100 players for each metric**.
+
+Here's the code to perform these tasks:
+
+```python
+
+
+import pandas as pd
+import numpy as np
+
+# Read the CSV file
+df = pd.read_csv('/Users/miahood/Desktop/untitled folder/players_stats_by_season_full_details.csv')
+
+# Calculate field goal accuracy (FGM/FGA)
+df['FG_accuracy'] = df['FGM'] / df['FGA']
+
+# Calculate three point accuracy (3PM/3PA)
+df['3P_accuracy'] = df['3PM'] / df['3PA']
+
+# Calculate free throw accuracy (FTM/FTA)
+df['FT_accuracy'] = df['FTM'] / df['FTA']
+
+# Calculate average points scored per minute (PTS/MIN)
+df['PTS_per_MIN'] = df['PTS'] / df['MIN']
+
+# Calculate overall shooting accuracy ((FGM + 3PM + FTM) / (FGA + 3PA + FTA))
+df['Overall_accuracy'] = (df['FGM'] + df['3PM'] + df['FTM']) / (df['FGA'] + df['3PA'] + df['FTA'])
+
+# Calculate average blocks per game (BLK/GP)
+df['BLK_per_game'] = df['BLK'] / df['GP']
+
+# Calculate average steals per game (STL/GP)
+df['STL_per_game'] = df['STL'] / df['GP']
+
+# Create a list of the top 100 players for each metric
+metrics = ['FG_accuracy', '3P_accuracy', 'FT_accuracy', 'PTS_per_MIN', 'Overall_accuracy', 'BLK_per_game', 'STL_per_game']
+top_100_players = {}
+
+for metric in metrics:
+    top_100_players[metric] = df[['Player', 'Season', metric]].sort_values(by=metric, ascending=False).head(100)
+
+# Display the top 100 players for each metric
+for metric, top_players in top_100_players.items():
+    print(f"Top 100 players for {metric}:")
+    print(top_players)
+    print("\n")
+```
+
+This code will read the CSV file, calculate the required metrics, and then sort and display the top 100 players for each metric. Adjust the file path as necessary.
+
+mhood112: without using pandas rewrite this code
+
+GitHub Copilot: To achieve this without using pandas, you can use the `csv` module and `numpy` for calculations. Here's the code:
+
+```python
+
+
+import csv
+import numpy as np
+
+# Read the CSV file
+file_path = '/Users/miahood/Desktop/untitled folder/players_stats_by_season_full_details.csv'
+data = []
+
+with open(file_path, 'r') as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        data.append(row)
+
+# Convert data to numpy arrays for calculations
+players = np.array([row['Player'] for row in data])
+seasons = np.array([row['Season'] for row in data])
+gp = np.array([float(row['GP']) for row in data])
+min_played = np.array([float(row['MIN']) for row in data])
+fgm = np.array([float(row['FGM']) for row in data])
+fga = np.array([float(row['FGA']) for row in data])
+tpm = np.array([float(row['3PM']) for row in data])
+tpa = np.array([float(row['3PA']) for row in data])
+ftm = np.array([float(row['FTM']) for row in data])
+fta = np.array([float(row['FTA']) for row in data])
+pts = np.array([float(row['PTS']) for row in data])
+blk = np.array([float(row['BLK']) for row in data])
+stl = np.array([float(row['STL']) for row in data])
+
+# Calculate metrics
+fg_accuracy = fgm / fga
+tp_accuracy = tpm / tpa
+ft_accuracy = ftm / fta
+pts_per_min = pts / min_played
+overall_accuracy = (fgm + tpm + ftm) / (fga + tpa + fta)
+blk_per_game = blk / gp
+stl_per_game = stl / gp
+
+# Create a list of the top 100 players for each metric
+metrics = {
+    'FG_accuracy': fg_accuracy,
+    '3P_accuracy': tp_accuracy,
+    'FT_accuracy': ft_accuracy,
+    'PTS_per_MIN': pts_per_min,
+    'Overall_accuracy': overall_accuracy,
+    'BLK_per_game': blk_per_game,
+    'STL_per_game': stl_per_game
+}
+
+top_100_players = {}
+
+for metric, values in metrics.items():
+    sorted_indices = np.argsort(values)[::-1][:100]
+    top_100_players[metric] = [(players[i], seasons[i], values[i]) for i in sorted_indices]
+
+# Display the top 100 players for each metric
+for metric, top_players in top_100_players.items():
+    print(f"Top 100 players for {metric}:")
+    for player in top_players:
+        print(player)
+    print("\n")
+```
+
+This code reads the CSV file, calculates the required metrics, and then sorts and displays the top 100 players for each metric. Adjust the file path as necessary.
+
+mhood112: write new results in a csv
+
+GitHub Copilot: To write the results into a new CSV file, you can use the `csv` module. Here's the updated code:
+
+```python
+
+
+import csv
+import numpy as np
+
+# Read the CSV file
+file_path = '/Users/miahood/Desktop/untitled folder/players_stats_by_season_full_details.csv'
+data = []
+
+with open(file_path, 'r') as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        data.append(row)
+
+# Convert data to numpy arrays for calculations
+players = np.array([row['Player'] for row in data])
+seasons = np.array([row['Season'] for row in data])
+gp = np.array([float(row['GP']) for row in data])
+min_played = np.array([float(row['MIN']) for row in data])
+fgm = np.array([float(row['FGM']) for row in data])
+fga = np.array([float(row['FGA']) for row in data])
+tpm = np.array([float(row['3PM']) for row in data])
+tpa = np.array([float(row['3PA']) for row in data])
+ftm = np.array([float(row['FTM']) for row in data])
+fta = np.array([float(row['FTA']) for row in data])
+pts = np.array([float(row['PTS']) for row in data])
+blk = np.array([float(row['BLK']) for row in data])
+stl = np.array([float(row['STL']) for row in data])
+
+# Calculate metrics
+fg_accuracy = fgm / fga
+tp_accuracy = tpm / tpa
+ft_accuracy = ftm / fta
+pts_per_min = pts / min_played
+overall_accuracy = (fgm + tpm + ftm) / (fga + tpa + fta)
+blk_per_game = blk / gp
+stl_per_game = stl / gp
+
+# Create a list of the top 100 players for each metric
+metrics = {
+    'FG_accuracy': fg_accuracy,
+    '3P_accuracy': tp_accuracy,
+    'FT_accuracy': ft_accuracy,
+    'PTS_per_MIN': pts_per_min,
+    'Overall_accuracy': overall_accuracy,
+    'BLK_per_game': blk_per_game,
+    'STL_per_game': stl_per_game
+}
+
+top_100_players = {}
+
+for metric, values in metrics.items():
+    sorted_indices = np.argsort(values)[::-1][:100]
+    top_100_players[metric] = [(players[i], seasons[i], values[i]) for i in sorted_indices]
+
+# Write the top 100 players for each metric to a new CSV file
+output_file_path = '/Users/miahood/Desktop/untitled folder/top_100_players_metrics.csv'
+
+with open(output_file_path, 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['Metric', 'Player', 'Season', 'Value'])
+    
+    for metric, top_players in top_100_players.items():
+        for player in top_players:
+            writer.writerow([metric, player[0], player[1], player[2]])
+
+print(f"Results written to {output_file_path}")
+```
+
+This code will write the top 100 players for each metric to a new CSV file named `top_100_players_metrics.csv`. Adjust the file paths as necessary.
