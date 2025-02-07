@@ -14,3 +14,18 @@ outputted - top_100_players_metrics.csv - contains top 100 players for each metr
 
 There are no classes within this project. Instead, there are functions and other programming techniques used.
 
+### Program Explanation
+
+Importing necessary libraires.
+  CSV - Allows the programs to read from and write to CSV files.
+  NumPy - This library allows for numerical computations needed in this program.
+
+Defining the File Path, Data Structure
+  file_path - this is the path for the CSV that has all the data on the players
+  data - this is a dictionary where each key represents a column in the CSV defined in the file_path. The values start off as an empty list and will store data later. 
+
+Reading the CSV File
+  This block of code will read the CSV, and append the relevent data to the corresponding lists in the data dictionary made previously 
+
+Converting Data to NumPy Arrays
+  
